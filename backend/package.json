@@ -4,16 +4,16 @@
   "description": "Hospital Management System Backend",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js",
+    "start": "node ./",
     "dev": "nodemon server.js"
   },
   "keywords": [
-    "hospital",
-    "management",
+    "healify",
     "express",
     "mongoose"
   ],
   "author": "",
+  "type": "module",
   "license": "ISC",
   "dependencies": {
     "bcryptjs": "^3.0.3",
