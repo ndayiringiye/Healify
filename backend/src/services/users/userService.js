@@ -7,7 +7,43 @@ import { emailService } from './emailService.js';
 
 const userService = {
 
-  
+    // ====================== INITIAL SETUP ======================
+  async createFirstManager(data) {
+    // Check if any user already exists
+    const userCount = await User.countDocuments();
+    if (userCount > 0) {
+      throw new Error('First manager can only be created when no users exist');
+    }
+
+    const existingEmail = await User.findOne({ email: data.email });
+    if (existingEmail) throw new Error('Email already registered');
+
+    const hashedPassword = await bcrypt.hash(data.password, 10);
+    const otp = otpgenerator.generate(6, { digits: true });
+    const otpExpiry = new Date(Date.now() + 10 * 60 * 1000);
+
+    const manager = await User.create({
+      ...data,
+      role: 'manager',
+      password: hashedPassword,
+      otp,
+      otpExpiry,
+      isVerified: false,
+      isActive: false,
+      createdBy: null // First user has no creator
+    });
+
+    await emailService.sendOTPEmail(manager.email, otp, manager.fullName);
+
+    const qrCode = await qrcode.toDataURL(`Healify-User:${manager._id}`);
+    manager.qrCode = qrCode;
+    await manager.save();
+
+    return { 
+      message: 'First Manager account created successfully. Please verify OTP.', 
+      userId: manager._id 
+    };
+  },
   async login(email, password) {
     const user = await User.findOne({ email });
     if (!user) throw new Error('Invalid credentials');

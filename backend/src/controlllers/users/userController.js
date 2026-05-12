@@ -1,5 +1,19 @@
 import userService from '../services/userService.js';
-
+  // Create First Manager (One-time setup - No Auth Required)
+ export const createFirstManager = async (req, res) => {
+    try {
+      const result = await userService.createFirstManager(req.body);
+      res.status(201).json({
+        success: true,
+        ...result
+      });
+    } catch (error) {
+      res.status(400).json({
+        success: false,
+        message: error.message
+      });
+    }
+  }
 export const login = async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -57,87 +71,84 @@ export const resetPassword = async (req, res) => {
   } catch (error) {
     res.status(400).json({ message: error.message });
   }
+};
 
-  async getAllUsers(req, res) {
-    try {
-      const { role, page = 1, limit = 20 } = req.query;
-      const users = await userService.getAllUsers(role, parseInt(page), parseInt(limit));
+export const getAllUsers = async (req, res) => {
+  try {
+    const { role, page = 1, limit = 20 } = req.query;
+    const users = await userService.getAllUsers(role, parseInt(page), parseInt(limit));
 
-      res.status(200).json({
-        success: true,
-        count: users.length,
-        users
-      });
-    } catch (error) {
-      res.status(500).json({
-        success: false,
-        message: error.message
-      });
-    }
-  },
+    res.status(200).json({
+      success: true,
+      count: users.length,
+      users
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message
+    });
+  }
+};
 
-  // Get Single User
-  async getUserById(req, res) {
-    try {
-      const user = await userService.getUserById(req.params.id);
-      res.status(200).json({
-        success: true,
-        user
-      });
-    } catch (error) {
-      res.status(404).json({
-        success: false,
-        message: error.message
-      });
-    }
-  },
+export const getUserById = async (req, res) => {
+  try {
+    const user = await userService.getUserById(req.params.id);
+    res.status(200).json({
+      success: true,
+      user
+    });
+  } catch (error) {
+    res.status(404).json({
+      success: false,
+      message: error.message
+    });
+  }
+};
 
-  // Update User
-  async updateUser(req, res) {
-    try {
-      const user = await userService.updateUser(req.params.id, req.body);
-      res.status(200).json({
-        success: true,
-        message: 'User updated successfully',
-        user
-      });
-    } catch (error) {
-      res.status(400).json({
-        success: false,
-        message: error.message
-      });
-    }
-  },
+export const updateUser = async (req, res) => {
+  try {
+    const user = await userService.updateUser(req.params.id, req.body);
+    res.status(200).json({
+      success: true,
+      message: 'User updated successfully',
+      user
+    });
+  } catch (error) {
+    res.status(400).json({
+      success: false,
+      message: error.message
+    });
+  }
+};
 
-  // Deactivate User
-   async deactivateUser(req, res) {
-    try {
-      const user = await userService.deactivateUser(req.params.id);
-      res.status(200).json({
-        success: true,
-        message: 'User deactivated successfully',
-        user
-      });
-    } catch (error) {
-      res.status(400).json({
-        success: false,
-        message: error.message
-      });
-    }
-  },
+export const deactivateUser = async (req, res) => {
+  try {
+    const user = await userService.deactivateUser(req.params.id);
+    res.status(200).json({
+      success: true,
+      message: 'User deactivated successfully',
+      user
+    });
+  } catch (error) {
+    res.status(400).json({
+      success: false,
+      message: error.message
+    });
+  }
+};
 
-  async deleteUser(req, res) {
-    try {
-      const result = await userService.deleteUser(req.params.id);
-      res.status(200).json({
-        success: true,
-        ...result
-      });
-    } catch (error) {
-      res.status(400).json({
-        success: false,
-        message: error.message
-      });
-    }
+export const deleteUser = async (req, res) => {
+  try {
+    const result = await userService.deleteUser(req.params.id);
+    res.status(200).json({
+      success: true,
+      ...result
+    });
+  } catch (error) {
+    res.status(400).json({
+      success: false,
+      message: error.message
+    });
   }
 };
