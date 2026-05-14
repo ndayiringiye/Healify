@@ -1,15 +1,13 @@
-import User from '../models/User.js';
+import User from '../../models/users/userModel.js';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import otpgenerator from 'otp-generator';
 import qrcode from 'qrcode';
-import { emailService } from './emailService.js';
+import { emailService } from '../../services/emails/emailService.js';
 
 const userService = {
 
-    // ====================== INITIAL SETUP ======================
   async createFirstManager(data) {
-    // Check if any user already exists
     const userCount = await User.countDocuments();
     if (userCount > 0) {
       throw new Error('First manager can only be created when no users exist');
@@ -30,7 +28,7 @@ const userService = {
       otpExpiry,
       isVerified: false,
       isActive: false,
-      createdBy: null // First user has no creator
+      createdBy: null 
     });
 
     await emailService.sendOTPEmail(manager.email, otp, manager.fullName);
@@ -167,7 +165,6 @@ const userService = {
     return { message: 'Password reset successful' };
   },
 
-  // ====================== CRUD ======================
   async getAllUsers(role = null, page = 1, limit = 20) {
     const query = role ? { role } : {};
     return await User.find(query)

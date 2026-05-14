@@ -1,154 +1,31 @@
-import userService from '../services/userService.js';
-  // Create First Manager (One-time setup - No Auth Required)
- export const createFirstManager = async (req, res) => {
-    try {
-      const result = await userService.createFirstManager(req.body);
-      res.status(201).json({
-        success: true,
-        ...result
-      });
-    } catch (error) {
-      res.status(400).json({
-        success: false,
-        message: error.message
-      });
-    }
-  }
-export const login = async (req, res) => {
-  try {
-    const { email, password } = req.body;
-    const result = await userService.login(email, password);
-    res.json(result);
-  } catch (error) {
-    res.status(401).json({ message: error.message });
-  }
-};
+import express from 'express';
+import userController from '../controllers/userController.js';
+import authController from '../../controllers/authController.js';
+import { protect } from '../middlewares/auth.js';
+import { 
+  isManager, 
+  isManagerOrAdmin 
+} from '../middlewares/role.js';
 
-export const register = async (req, res) => {
-  try {
-    const result = await userService.registerUser(req.body, req.user?.id);
-    res.status(201).json(result);
-  } catch (error) {
-    res.status(400).json({ message: error.message });
-  }
-};
+const router = express.Router();
 
-export const verifyOTP = async (req, res) => {
-  try {
-    const { email, otp } = req.body;
-    const result = await userService.verifyOTP(email, otp); // Add this method if needed
-    res.json(result);
-  } catch (error) {
-    res.status(400).json({ message: error.message });
-  }
-};
+router.post('/first-manager', authController.createFirstManager);
 
-export const resendOTP = async (req, res) => {
-  try {
-    const { email } = req.body;
-    const result = await userService.resendOTP(email);
-    res.json(result);
-  } catch (error) {
-    res.status(400).json({ message: error.message });
-  }
-};
+router.post('/login', authController.login);
+router.post('/verify-otp', authController.verifyOTP);
+router.post('/resend-otp', authController.resendOTP);
+router.post('/forgot-password', authController.forgotPassword);
+router.post('/reset-password', authController.resetPassword);
 
-export const forgotPassword = async (req, res) => {
-  try {
-    const { email } = req.body;
-    const result = await userService.forgotPassword(email);
-    res.json(result);
-  } catch (error) {
-    res.status(400).json({ message: error.message });
-  }
-};
+router.use(protect);   
 
-export const resetPassword = async (req, res) => {
-  try {
-    const { email, token, newPassword } = req.body;
-    const result = await userService.resetPassword(email, token, newPassword);
-    res.json(result);
-  } catch (error) {
-    res.status(400).json({ message: error.message });
-  }
-};
+router.post('/register', isManager, authController.register);
 
-export const getAllUsers = async (req, res) => {
-  try {
-    const { role, page = 1, limit = 20 } = req.query;
-    const users = await userService.getAllUsers(role, parseInt(page), parseInt(limit));
+router.get('/', isManagerOrAdmin, userController.getAllUsers);
+router.get('/:id', isManagerOrAdmin, userController.getUserById);
 
-    res.status(200).json({
-      success: true,
-      count: users.length,
-      users
-    });
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: error.message
-    });
-  }
-};
+router.put('/:id', isManager, userController.updateUser);
+router.patch('/:id/deactivate', isManager, userController.deactivateUser);
+router.delete('/:id', isManager, userController.deleteUser);
 
-export const getUserById = async (req, res) => {
-  try {
-    const user = await userService.getUserById(req.params.id);
-    res.status(200).json({
-      success: true,
-      user
-    });
-  } catch (error) {
-    res.status(404).json({
-      success: false,
-      message: error.message
-    });
-  }
-};
-
-export const updateUser = async (req, res) => {
-  try {
-    const user = await userService.updateUser(req.params.id, req.body);
-    res.status(200).json({
-      success: true,
-      message: 'User updated successfully',
-      user
-    });
-  } catch (error) {
-    res.status(400).json({
-      success: false,
-      message: error.message
-    });
-  }
-};
-
-export const deactivateUser = async (req, res) => {
-  try {
-    const user = await userService.deactivateUser(req.params.id);
-    res.status(200).json({
-      success: true,
-      message: 'User deactivated successfully',
-      user
-    });
-  } catch (error) {
-    res.status(400).json({
-      success: false,
-      message: error.message
-    });
-  }
-};
-
-export const deleteUser = async (req, res) => {
-  try {
-    const result = await userService.deleteUser(req.params.id);
-    res.status(200).json({
-      success: true,
-      ...result
-    });
-  } catch (error) {
-    res.status(400).json({
-      success: false,
-      message: error.message
-    });
-  }
-};
+export default router;

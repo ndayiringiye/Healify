@@ -1,33 +1,44 @@
 import express from 'express';
-import userController from '../controllers/userController.js';
-import authController from '../controllers/authController.js';
-import { protect } from '../middlewares/auth.js';
+import {
+  getAllUsers,
+  getUserById,
+  updateUser,
+  deactivateUser,
+  deleteUser
+} from '../controllers/userController.js';
+import {
+  createFirstManager,
+  login,
+  register,
+  verifyOTP,
+  resendOTP,
+  forgotPassword,
+  resetPassword
+} from '../controllers/authController.js';
+import { protect } from '../middlewares/user/auth.js';
 import { 
   isManager, 
   isManagerOrAdmin 
-} from '../middlewares/role.js';
+} from '../middlewares/user/role.js';
 
 const router = express.Router();
 
-router.post('/first-manager', authController.createFirstManager);
+router.post('/first-manager', createFirstManager);
+router.post('/login', login);
+router.post('/verify-otp', verifyOTP);
+router.post('/resend-otp', resendOTP);
+router.post('/forgot-password', forgotPassword);
+router.post('/reset-password', resetPassword);
 
-router.use(protect);
+router.use(protect);   
 
+router.post('/register', isManager, register);
 
-router.post('/register', isManager, authController.register);
-router.post('/login', authController.login);
-router.post('/verify-otp', authController.verifyOTP);
-router.post('/resend-otp', authController.resendOTP);
-router.post('/forgot-password', authController.forgotPassword);
-router.post('/reset-password', authController.resetPassword);
-router.get('/', isManagerOrAdmin, userController.getAllUsers);
+router.get('/', isManagerOrAdmin, getAllUsers);
+router.get('/:id', isManagerOrAdmin, getUserById);
 
-router.get('/:id', isManagerOrAdmin, userController.getUserById);
-
-router.put('/:id', isManager, userController.updateUser);
-
-router.patch('/:id/deactivate', isManager, userController.deactivateUser);
-
-router.delete('/:id', isManager, userController.deleteUser);
+router.put('/:id', isManager, updateUser);
+router.patch('/:id/deactivate', isManager, deactivateUser);
+router.delete('/:id', isManager, deleteUser);
 
 export default router;
