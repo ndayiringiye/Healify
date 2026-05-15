@@ -14,14 +14,14 @@ const posts = [
     title: "Surprising body cues that could be heart concern",
     category: "Therapy",
     date: "28 Jan 2026",
-    image: "https://images.unsplash.com/photo-1579684385127-1ef15d558a9a?w=600&q=80",
+    image: "https://images.pexels.com/photos/6129209/pexels-photo-6129209.jpeg",
     href: "#",
   },
   {
     title: "Every person is in charge of maintaining good health",
     category: "Wellness",
     date: "25 Jan 2026",
-    image: "https://images.unsplash.com/photo-1505751172879-fa1923c5c528?w=600&q=80",
+    image: "https://images.pexels.com/photos/5622237/pexels-photo-5622237.jpeg",
     href: "#",
   },
 ];
