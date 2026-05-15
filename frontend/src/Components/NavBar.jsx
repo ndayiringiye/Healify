@@ -14,7 +14,6 @@ import { FaFacebookF } from "react-icons/fa6";
 import { FaTwitter } from "react-icons/fa6";
 import { MdDarkMode } from "react-icons/md";
 import { GiFlowerStar } from "react-icons/gi";
-
 import logo from "../../public/images/logo.png";
 
 const NavBar = () => {
