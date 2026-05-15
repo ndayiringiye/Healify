@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import {
   ChevronDown,
   Clock3,
@@ -184,6 +185,12 @@ const NavBar = () => {
 
         {/* Actions */}
         <div className="flex items-center gap-2">
+          <Link
+            to="/auth"
+            className="hidden sm:inline-flex px-5 py-2.5 rounded-full bg-[#f5923e] text-white text-sm font-semibold hover:bg-[#e67a35] transition-colors"
+          >
+            Login
+          </Link>
           <button className="w-[42px] h-[42px] rounded-full bg-[#1b3b5a] dark:bg-gray-700 hover:bg-[#22bcd4] duration-200 flex items-center justify-center">
             <Search size={18} className="text-white" />
           </button>

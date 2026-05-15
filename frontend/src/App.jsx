@@ -1,12 +1,18 @@
-import NavBar from "./Components/NavBar";
-import HomePage from "./Components/Home/HomePage";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import HomePage from "./pages/HomePage";
+import AuthPage from "./pages/AuthPage";
+import ManagerDashboard from "./Pages/Dashbaords/ManagerDashboard";
 
 const App = () => {
   return (
-    <div className="min-h-screen bg-white dark:bg-gray-900">
-      <NavBar />
-      <HomePage />
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/auth" element={<AuthPage />} />
+        <Route path="/login" element={<AuthPage />} />
+        <Route path="/manager" element={<ManagerDashboard />} />
+      </Routes>
+    </BrowserRouter>
   );
 };
 

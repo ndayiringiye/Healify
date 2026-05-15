@@ -1,9 +1,11 @@
 import { motion } from "framer-motion";
 import { Mail, MapPin, Phone } from "lucide-react";
 import { FaFacebookF, FaTwitter, FaLinkedinIn } from "react-icons/fa6";
-
+import doctor from "../../../public/images/doctor.png"; 
+import dental from "../../../public/images/dental.png";
+import cerumn from "../../../public/images/cerumn.png";
 import logo from "../../../public/images/logo.png";
-
+import service from "../../../public/images/sevice.png";
 const services = [
   "Cardiovascular",
   "Heart Checkup",
@@ -13,14 +15,33 @@ const services = [
   "Dental Care",
 ];
 
+// All local assets — avoids broken external URLs; 6 slots for 3×2 grid (Medixi-style)
 const gallery = [
-  "https://images.unsplash.com/photo-1519494027042-4da53f731a83?w=200&q=80",
-  "https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=200&q=80",
-  "https://images.unsplash.com/photo-1586773866620-bc352645385f?w=200&q=80",
-  "https://images.unsplash.com/photo-1631217868264-e5b1bb5e8915?w=200&q=80",
-  "https://images.unsplash.com/photo-1582719471384-894fbb16e074?w=200&q=80",
-  "https://images.unsplash.com/photo-1579684385127-1ef15d558a9a?w=200&q=80",
+  { id: "doctor", src: doctor, alt: "Medical team" },
+  { id: "dental", src: dental, alt: "Dental care" },
+  { id: "cerumn", src: cerumn, alt: "Laboratory" },
+  { id: "service", src: service, alt: "Healthcare services" },
+  { id: "doctor-2", src: doctor, alt: "Patient care" },
+  { id: "dental-2", src: dental, alt: "Clinic" },
 ];
+
+// #region agent log
+const debugLog = (message, data, hypothesisId) => {
+  fetch("http://127.0.0.1:7591/ingest/f69307e4-882c-4ba3-ae4f-40d376d04480", {
+    method: "POST",
+    headers: { "Content-Type": "application/json", "X-Debug-Session-Id": "f0996a" },
+    body: JSON.stringify({
+      sessionId: "f0996a",
+      location: "Footer.jsx:gallery",
+      message,
+      data,
+      hypothesisId,
+      timestamp: Date.now(),
+      runId: "post-fix",
+    }),
+  }).catch(() => {});
+};
+// #endregion
 
 const hours = [
   { day: "Mon - Fri:", time: "8:00 am - 8:00 pm" },
@@ -103,12 +124,24 @@ export default function Footer() {
         >
           <h4 className="text-white font-bold text-lg mb-5">Gallery</h4>
           <div className="grid grid-cols-3 gap-2">
-            {gallery.map((src, i) => (
-              <a key={i} href="#" className="block overflow-hidden rounded-lg aspect-square">
+            {gallery.map((item, i) => (
+              <a
+                key={item.id}
+                href="#"
+                className="block overflow-hidden rounded-lg aspect-square bg-white/5"
+              >
                 <img
-                  src={src}
-                  alt={`Gallery ${i + 1}`}
-                  className="w-full h-full object-cover hover:scale-110 transition-transform duration-300"
+                  src={item.src}
+                  alt={item.alt}
+                  loading="lazy"
+                  decoding="async"
+                  className="w-full h-full object-cover object-center hover:scale-110 transition-transform duration-300"
+                  onLoad={() =>
+                    debugLog("gallery image loaded", { id: item.id, index: i, src: item.src }, "D")
+                  }
+                  onError={() =>
+                    debugLog("gallery image failed", { id: item.id, index: i, src: item.src }, "A")
+                  }
                 />
               </a>
             ))}
