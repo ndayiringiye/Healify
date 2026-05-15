@@ -15,6 +15,10 @@ export default {
           "cyan-pale": "#aaf0f8",
           surface: "#f0fafd",
         },
+        auth: {
+          blue: "#4a6cf7",
+          orange: "#f5923e",
+        },
       },
       fontFamily: {
         poppins: ["Poppins", "sans-serif"],
