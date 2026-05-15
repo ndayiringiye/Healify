@@ -14,11 +14,13 @@ import { FaTwitter } from "react-icons/fa6";
 import { MdDarkMode } from "react-icons/md";
 import { GiFlowerStar } from "react-icons/gi";
 
-import logo from "../../public/images/logo.png";   // Make sure path is correct
+import logo from "../../public/images/logo.png";
 
 const NavBar = () => {
   const [isDark, setIsDark] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
 
+  // Dark Mode
   useEffect(() => {
     const savedTheme = localStorage.getItem("theme");
     const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
@@ -29,6 +31,16 @@ const NavBar = () => {
     } else {
       document.documentElement.classList.remove("dark");
     }
+  }, []);
+
+  // Scroll Detection for better sticky effect
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 20);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   const toggleDarkMode = () => {
@@ -45,7 +57,7 @@ const NavBar = () => {
   };
 
   return (
-    <header className="w-full font-[Poppins]">
+    <header className="w-full font-[Poppins] sticky top-0 z-50 bg-white dark:bg-gray-900 shadow-md transition-all duration-300">
       {/* Top Bar */}
       <div className="bg-[#1b3b5a] dark:bg-gray-900 px-5 lg:px-10 py-2.5 hidden lg:flex items-center justify-between">
         <div className="flex items-center gap-7">
@@ -60,7 +72,7 @@ const NavBar = () => {
             <div className="w-[30px] h-[30px] rounded-full bg-[#22bcd4] flex items-center justify-center">
               <MapPin size={14} className="text-white" />
             </div>
-            <span>36D Street Brooklyn, New York</span>
+            <span>36D Street Nyabiheke, Gastibo</span>
           </div>
 
           <div className="flex items-center gap-2 text-[#c8dff0] text-[13.5px]">
@@ -98,9 +110,12 @@ const NavBar = () => {
         </div>
       </div>
 
-      {/* Main Navigation */}
-      <nav className="bg-white dark:bg-gray-900 h-[82px] px-5 lg:px-10 flex items-center justify-between shadow-[0_2px_10px_rgba(0,0,0,0.07)] dark:shadow-gray-800 border-b dark:border-gray-700">
-        {/* ===== IMPROVED LOGO ===== */}
+      {/* Main Navigation - Sticky */}
+      <nav className={`bg-white dark:bg-gray-900 h-[82px] px-5 lg:px-10 flex items-center justify-between border-b dark:border-gray-700 transition-all duration-300 ${
+        isScrolled ? "shadow-xl" : "shadow-[0_2px_10px_rgba(0,0,0,0.07)]"
+      }`}>
+        
+        {/* Logo */}
         <a href="#" className="flex items-center gap-3 group">
           <div className="relative flex items-center justify-center transition-transform duration-300 group-hover:scale-105">
             <img
@@ -114,13 +129,10 @@ const NavBar = () => {
         {/* Menu */}
         <ul className="hidden lg:flex items-center gap-1">
           <li className="relative group">
-            <a
-              href="#"
-              className="flex items-center gap-1 px-3.5 py-2.5 text-[15px] font-medium text-[#1b3b5a] dark:text-gray-200 hover:text-[#22bcd4] dark:hover:text-[#22bcd4] duration-200"
-            >
-              Home
-              <ChevronDown size={13} />
+            <a href="#" className="flex items-center gap-1 px-3.5 py-2.5 text-[15px] font-medium text-[#1b3b5a] dark:text-gray-200 hover:text-[#22bcd4] dark:hover:text-[#22bcd4] duration-200">
+              Home <ChevronDown size={13} />
             </a>
+            {/* Dropdowns... (kept same) */}
             <div className="absolute top-[calc(100%+4px)] left-0 bg-white dark:bg-gray-800 border border-[#e2edf5] dark:border-gray-700 rounded-md shadow-xl min-w-[170px] overflow-hidden opacity-0 invisible group-hover:opacity-100 group-hover:visible duration-200 z-50">
               <a href="#" className="block px-4 py-2.5 text-sm text-[#1b3b5a] dark:text-gray-200 hover:bg-[#f0fafd] dark:hover:bg-gray-700 hover:text-[#22bcd4]">Home v1</a>
               <a href="#" className="block px-4 py-2.5 text-sm text-[#1b3b5a] dark:text-gray-200 hover:bg-[#f0fafd] dark:hover:bg-gray-700 hover:text-[#22bcd4]">Home v2</a>
