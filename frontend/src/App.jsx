@@ -1,12 +1,13 @@
-import NavBar from "./Components/NavBar"
-import HeroSection from "./Components/Home/HeroSection"
+import NavBar from "./Components/NavBar";
+import HomePage from "./Components/Home/HomePage";
+
 const App = () => {
   return (
-    <div>
+    <div className="min-h-screen bg-white dark:bg-gray-900">
       <NavBar />
-      <HeroSection />
+      <HomePage />
     </div>
-  )
-}
+  );
+};
 
-export default App
+export default App;
